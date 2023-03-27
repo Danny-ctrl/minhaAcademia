@@ -15,19 +15,29 @@ export function Profile() {
   const [userPhoto, setUserPhoto] = useState('https://github.com/Danny-ctrl.png')
 
   async function handleUserPhotoSelect() {
-    const photoSelected = await Imagepicker.launchImageLibraryAsync({
-      mediaTypes: Imagepicker.MediaTypeOptions.Images,
-      quality: 1,
-      aspect: [4, 4],
-      allowsEditing: true
-    });
+    setPhotoIsLoading(true);
+    try {
+      const photoSelected = await Imagepicker.launchImageLibraryAsync({
+        mediaTypes: Imagepicker.MediaTypeOptions.Images,
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true
+      });
 
-    if (photoSelected.canceled) {
-      return;
+      if (photoSelected.canceled) {
+        return;
+      }
+
+      if (photoSelected.assets[0].uri) {
+        setUserPhoto(photoSelected.assets[0].uri)
+      }
+      setUserPhoto(photoSelected.assets[0].uri);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setPhotoIsLoading(false);
     }
-    setUserPhoto(photoSelected.assets[0].uri);
   }
-
   return (
     <VStack flex={1}>
       <ScreenHeader title="Perfil" />
