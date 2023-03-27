@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
-import { TouchableOpacity, } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import * as Imagepicker from 'expo-image-picker';
 
@@ -12,14 +12,20 @@ import { Center, ScrollView, VStack, Skeleton, Text, Heading } from 'native-base
 const PHOTO_SIZE = 33;
 export function Profile() {
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
+  const [userPhoto, setUserPhoto] = useState('https://github.com/Danny-ctrl.png')
 
   async function handleUserPhotoSelect() {
-    await Imagepicker.launchImageLibraryAsync({
+    const photoSelected = await Imagepicker.launchImageLibraryAsync({
       mediaTypes: Imagepicker.MediaTypeOptions.Images,
       quality: 1,
       aspect: [4, 4],
       allowsEditing: true
     });
+
+    if (photoSelected.canceled) {
+      return;
+    }
+    setUserPhoto(photoSelected.assets[0].uri);
   }
 
   return (
@@ -39,7 +45,7 @@ export function Profile() {
               />
               :
               <UserPhoto
-                source={{ uri: 'https://github.com/Danny-ctrl.png' }}
+                source={{ uri: userPhoto }}
                 alt="Foto do Usuario"
                 size={PHOTO_SIZE}
               />
