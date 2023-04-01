@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { VStack, Text, Center, Image, Heading, ScrollView } from 'native-base';
 
@@ -8,10 +9,24 @@ import { Button } from '@components/Button';
 
 export function SignUp() {
 
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+
   const navigation = useNavigation();
 
   function handleGoBack() {
     navigation.goBack();
+  }
+
+  function handleSignUp() {
+    console.log({
+      name,
+      email,
+      password,
+      passwordConfirm
+    });
   }
 
   return (
@@ -37,16 +52,30 @@ export function SignUp() {
           <Heading color="gray.100" fontSize="xl" mb={6} fontFamily="heading">
             Crie sua conta
           </Heading>
+
           <Input placeholder="Nome"
+            onChangeText={setName}
           />
           <Input placeholder="E-mail"
             keyboardType="email-address"
             autoCapitalize="none"
+            onChangeText={setEmail}
           />
           <Input placeholder="Senha"
             secureTextEntry
+            onChangeText={setPassword}
           />
-          <Button title="Criar e Acessar" />
+
+          <Input placeholder="Confirme a Senha"
+            secureTextEntry
+            onChangeText={setPasswordConfirm}
+          />
+
+          <Button
+            title="Criar e Acessar"
+            onPress={handleSignUp}
+          />
+
         </Center>
 
 
