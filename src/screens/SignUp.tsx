@@ -18,7 +18,7 @@ type FormDataProps = {
 export function SignUp() {
 
 
-  const { control, handleSubmit } = useForm<FormDataProps>();
+  const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>();
 
   const navigation = useNavigation();
 
@@ -57,6 +57,9 @@ export function SignUp() {
           <Controller
             control={control}
             name="name"
+            rules={{
+              required: 'Informe o nome'
+            }}
             render={({ field: { onChange, value } }) => (
               <Input placeholder="Nome"
                 onChangeText={onChange}
@@ -66,6 +69,9 @@ export function SignUp() {
 
           />
 
+          <Text color="white">
+            {errors.name?.message}
+          </Text>
           <Controller
             control={control}
             name="email"
