@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { FlatList, Heading, HStack, VStack, Text } from 'native-base';
+import { FlatList, HStack, VStack, Text, Heading } from 'native-base';
 
 import { HomeHeader } from '@components/HomeHeader';
 import { Group } from '@components/Group';
@@ -40,7 +40,7 @@ export function Home() {
       />
       <VStack flex={1} px={8}>
         <HStack justifyContent="space-between" mb={5}>
-          <Heading color="gray.200" fontSize="md">
+          <Heading color="gray.200" fontSize="md" fontFamily="heading">
             Exercícios
           </Heading>
           <Text color="gray.200" fontSize="sm">
