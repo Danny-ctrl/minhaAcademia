@@ -1,18 +1,18 @@
 
-import { useNavigation } from '@react-navigation/native';
-import { VStack, Text, Center, Image, Heading, ScrollView } from 'native-base';
+import * as yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { useNavigation } from '@react-navigation/native';
+import { VStack, Text, Center, Image, Heading, ScrollView, useToast } from 'native-base';
 
-import axios from 'axios';
+
 import { api } from '@services/api';
 
 import LogoSvg from '@assets/logo.svg';
-import BackgroundImg from '@assets/background.png';
 import { Input } from '@components/Input';
+import { AppError } from '@utils/AppError';
 import { Button } from '@components/Button';
-import { Alert } from 'react-native';
+import BackgroundImg from '@assets/background.png';
 
 type FormDataProps = {
   name: string;
@@ -29,7 +29,7 @@ const signUpSchema = yup.object({
 });
 
 export function SignUp() {
-
+  const toast = useToast();
 
   const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
     resolver: yupResolver(signUpSchema)
@@ -46,9 +46,14 @@ export function SignUp() {
       const response = await api.post('/users', { name, email, password });
       console.log(response.data);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        Alert.alert(error.response?.data.message);
-      }
+      const isAppError = error instanceof AppError;
+      const title = isAppError ? error.message : 'Não foi possível criar a conta.Tente novamente mais tarde.'
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500'
+      });
     }
   }
   return (
