@@ -3,6 +3,7 @@ import { HStack, VStack, Text, Heading, Icon } from 'native-base';
 
 import { UserPhoto } from './UserPhoto';
 
+import defaultUserPhotoImg from '@assets/userPhotoDefault.png';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '@hooks/useAuth';
 
@@ -13,7 +14,7 @@ export function HomeHeader() {
   return (
     <HStack bg="gray.600" pt={16} pb={5} px={8} alignItems="center">
       <UserPhoto
-        source={{ uri: 'https://github.com/Danny-ctrl.png' }}
+        source={user.avatar ? { uri: user.avatar } : defaultUserPhotoImg}
         alt="Imagem do usuario"
         size={16}
         mr={4}
