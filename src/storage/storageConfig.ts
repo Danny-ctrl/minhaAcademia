@@ -1,3 +1,4 @@
-const USER_STORAGE = '@minhacademia:user';
+const USER_STORAGE = '@minhaAcademia:user';
+const AUTH_TOKEN_STORAGE = '@minhaAcademia:token'
 
-export { USER_STORAGE };
+export { USER_STORAGE, AUTH_TOKEN_STORAGE };
