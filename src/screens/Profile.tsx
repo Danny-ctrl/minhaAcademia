@@ -14,6 +14,8 @@ import { UserPhoto } from '@components/UserPhoto';
 import { ScreenHeader } from '@components/ScreenHeader';
 import { Center, ScrollView, VStack, Skeleton, Text, Heading, useToast } from 'native-base';
 import { useAuth } from '@hooks/useAuth';
+import { api } from '@services/api';
+import { AppError } from '@utils/AppError';
 
 const PHOTO_SIZE = 33;
 
@@ -26,14 +28,33 @@ type FormDataProps = {
 }
 
 const profileSchema = yup.object({
-  name: yup.string().required('Informe o nome.'),
+  name: yup
+    .string()
+    .required('Informe o nome.'), password: yup
+      .string()
+      .min(6, 'A senha deve ter pelo menos 6 dígitos')
+      .nullable()
+      .transform((value) => !!value ? value : null),
+  confirm_password: yup
+    .string()
+    .nullable()
+    .transform((value) => !!value ? value : null)
+    .oneOf([yup.ref('password'), null], 'A confirmação de senha não confere.')
+    .when('password', {
+      is: (Field: any) => Field,
+      then: (schema) => schema
+        .nullable()
+        .required('Informe a confirmação da senha.')
+    })
 });
 
 export function Profile() {
+  const [isUpDating, setIsUpDating] = useState(false);
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [userPhoto, setUserPhoto] = useState('https://github.com/Danny-ctrl.png')
-  const { user } = useAuth();
+  const { user, updateUserProfile } = useAuth();
   const toast = useToast();
+
   const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
     defaultValues: {
       name: user.name,
@@ -81,8 +102,35 @@ export function Profile() {
   }
 
   async function handleProfileUpdate(data: FormDataProps) {
-    console.log(data);
+    try {
+      setIsUpDating(true);
+
+      const userUpdated = user;
+      userUpdated.name = data.name;
+
+      await api.put('/users', data);
+
+      await updateUserProfile(userUpdated);
+
+      toast.show({
+        title: 'Perfil atualizado com sucesso!',
+        placement: 'top',
+        bgColor: 'green.500'
+      });
+
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError ? error.message : 'Não foi possível atualizar os dados. Tente novamente mais tarde.'
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500'
+      });
+    } finally {
+      setIsUpDating(false);
+    }
   }
+
 
   return (
     <VStack flex={1}>
@@ -195,6 +243,7 @@ export function Profile() {
             title="Atualizar"
             mt={4}
             onPress={handleSubmit(handleProfileUpdate)}
+            isLoading={isUpDating}
           />
 
         </VStack>
