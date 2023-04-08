@@ -6,6 +6,7 @@ import { AppError } from '@utils/AppError';
 import { api } from '@services/api';
 import { useFocusEffect } from '@react-navigation/native';
 import { HistoryByDayDTO } from '@dtos/HistoryByDayDTO';
+import { Loading } from '@components/Loading';
 
 export function History() {
   const [isLoading, setIsloading] = useState(true);
@@ -38,29 +39,31 @@ export function History() {
   return (
     <VStack flex={1}>
       <ScreenHeader title="Histórico de Exercícios" />
-      <SectionList
-        sections={exercises}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <HistoryCard data={item} />
-        )}
-        renderSectionHeader={({ section }) => (
-          <Heading color="gray.200" textAlign="center" fontSize="md" mt={10} mb={3} fontFamily="heading">
+      {
+        isLoading ? <Loading /> :
+          <SectionList
+            sections={exercises}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (
+              <HistoryCard data={item} />
+            )}
+            renderSectionHeader={({ section }) => (
+              <Heading color="gray.200" textAlign="center" fontSize="md" mt={10} mb={3} fontFamily="heading">
 
-            {section.title}
-          </Heading>
-        )}
-        px={8}
-        contentContainerStyle={exercises.length === 0 && { flex: 1, justifyContent: "center" }}
-        ListEmptyComponent={() => (
-          <Text color="gray.100" textAlign="center">
-            Não há histórico de exercícios registrados ainda. {'\n'}
-            Vamos treinar hoje?
-          </Text>
-        )}
-        showsVerticalScrollIndicator={false}
-      />
-
+                {section.title}
+              </Heading>
+            )}
+            px={8}
+            contentContainerStyle={exercises.length === 0 && { flex: 1, justifyContent: "center" }}
+            ListEmptyComponent={() => (
+              <Text color="gray.100" textAlign="center">
+                Não há histórico de exercícios registrados ainda. {'\n'}
+                Vamos treinar hoje?
+              </Text>
+            )}
+            showsVerticalScrollIndicator={false}
+          />
+      }
     </VStack>
   );
 }

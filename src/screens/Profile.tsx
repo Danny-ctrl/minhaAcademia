@@ -122,7 +122,7 @@ export function Profile() {
       }
 
     } catch (error) {
-      console.log(error);
+
     } finally {
       setPhotoIsLoading(false);
     }
