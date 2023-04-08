@@ -15,7 +15,7 @@ export function ExerciseCard({ data, ...rest }: Props) {
       <HStack bg="gray.500" alignItems="center" p={2} pr={4} rounded="md" mb={3}>
         <Image
           source={{ uri: `${api.defaults.baseURL}/exercise/thumb/${data.thumb}` }}
-          alt="Imagem da execução do exercicio remada unilateral"
+          alt="Imagem da execução do exercício remada unilateral"
           w={16}
           h={16}
           rounded="md"
